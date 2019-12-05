@@ -1,0 +1,16 @@
+popover {
+  padding: 5px;
+}
+
+popover > box > * {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+popover > box > label {
+  font-size: 125%;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+popover > box > buttonbox {}
