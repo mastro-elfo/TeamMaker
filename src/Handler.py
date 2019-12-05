@@ -40,6 +40,10 @@ class Handler(Builder):
     def popdown(self, popover, *args):
         popover.popdown()
 
+    def hide(self, window, *args):
+        window.hide()
+        return True
+
     def load(self):
         try:
             return Players.load(PLAYERS_PICKLE)
@@ -54,17 +58,20 @@ class Handler(Builder):
 
     # Events
     def on_PlayersSelection_changed(self, selection, *args):
-        if selection.count_selected_rows() > 0:
+        count = selection.count_selected_rows()
+        if count > 0:
             self.set_sensitive('EditButton', True)
             self.set_sensitive('DeleteButton', True)
         else:
             self.set_sensitive('EditButton', False)
             self.set_sensitive('DeleteButton', False)
 
-        if selection.count_selected_rows() > 1:
+        if count > 1:
             self.set_sensitive('MakeButton', True)
         else:
             self.set_sensitive('MakeButton', False)
+
+        self.status('Selected %d player(s)' %count)
 
     def on_ConfirmNewPlayer_clicked(self, *args):
         # Collect data
@@ -164,32 +171,11 @@ class Handler(Builder):
                 self.set_text('EditSurname', player.surname)
 
     def on_MakePopover_show(self, *args):
-        self.set_active('MakeBest', True)
-        self.on_MakeBest_toggled(self.get_object('MakeBest'))
-
-    def on_MakeBest_toggled(self, button, *args):
-        if button.get_active():
-            model, path = self.get_selected_rows('PlayersSelection')
-            players = list(filter(lambda x: x.id in [model[p][0] for p in path], self.players))
-            left_team, right_team = make_best(players)
-            self.update_store('MakeLeftStore', map(lambda x: (x.id, x.nickname, x.number, x.rating, x.name, x.surname), left_team))
-            self.update_store('MakeRightStore', map(lambda x: (x.id, x.nickname, x.number, x.rating, x.name, x.surname), right_team))
-
-    def on_MakePairs_toggled(self, button, *args):
-        if button.get_active():
-            model, path = self.get_selected_rows('PlayersSelection')
-            players = list(filter(lambda x: x.id in [model[p][0] for p in path], self.players))
-            left_team, right_team = make_pairs(players)
-            self.update_store('MakeLeftStore', map(lambda x: (x.id, x.nickname, x.number, x.rating, x.name, x.surname), left_team))
-            self.update_store('MakeRightStore', map(lambda x: (x.id, x.nickname, x.number, x.rating, x.name, x.surname), right_team))
-
-    def on_MakeABBA_toggled(self, button, *args):
-        if button.get_active():
-            model, path = self.get_selected_rows('PlayersSelection')
-            players = list(filter(lambda x: x.id in [model[p][0] for p in path], self.players))
-            left_team, right_team = make_abba(players)
-            self.update_store('MakeLeftStore', map(lambda x: (x.id, x.nickname, x.number, x.rating, x.name, x.surname), left_team))
-            self.update_store('MakeRightStore', map(lambda x: (x.id, x.nickname, x.number, x.rating, x.name, x.surname), right_team))
+        model, path = self.get_selected_rows('PlayersSelection')
+        players = list(filter(lambda x: x.id in [model[p][0] for p in path], self.players))
+        left_team, right_team = make_best(players)
+        self.update_store('MakeLeftStore', map(lambda x: (x.id, x.nickname, x.number, x.rating, x.name, x.surname), left_team))
+        self.update_store('MakeRightStore', map(lambda x: (x.id, x.nickname, x.number, x.rating, x.name, x.surname), right_team))
 
     def on_MakeLeftRightStore_row_changed(self, *args):
         left_team = Players(*[self.players.find_id(p[0]) for p in self.get_object('MakeLeftStore')])
@@ -203,20 +189,25 @@ class Handler(Builder):
         model, path = self.get_selected_rows('MakeLeftSelection')
         left_store = self.get_object('MakeLeftStore')
         right_store = self.get_object('MakeRightStore')
+        to_remove = [model.get_iter(p) for p in path]
         for selected in path:
             right_store.append(tuple(model[selected]))
-            left_store.remove(model.get_iter(selected))
+        for rem in to_remove:
+            left_store.remove(rem)
 
     def on_MakeToLeft_clicked(self, *args):
         model, path = self.get_selected_rows('MakeRightSelection')
         left_store = self.get_object('MakeLeftStore')
         right_store = self.get_object('MakeRightStore')
+        to_remove = [model.get_iter(p) for p in path]
         for selected in path:
             left_store.append(tuple(model[selected]))
-            right_store.remove(model.get_iter(selected))
+        for rem in to_remove:
+            right_store.remove(rem)
 
     def on_UnselectButton_clicked(self, *args):
         self.get_object('PlayersSelection').unselect_all()
+        self.status('Unselected')
 
     def on_ApplyMakeTeams_clicked(self, *args):
         left_team = Players(*[self.players.find_id(p[0]) for p in self.get_object('MakeLeftStore')])
@@ -244,17 +235,21 @@ class Handler(Builder):
         model, path = self.get_selected_rows('UpdateLeftSelection')
         left_store = self.get_object('UpdateLeftStore')
         right_store = self.get_object('UpdateRightStore')
+        to_remove = [model.get_iter(p) for p in path]
         for selected in path:
             right_store.append(tuple(model[selected]))
-            left_store.remove(model.get_iter(selected))
+        for rem in to_remove:
+            left_store.remove(rem)
 
     def on_UpdateToLeft_clicked(self, *args):
         model, path = self.get_selected_rows('UpdateRightSelection')
         left_store = self.get_object('UpdateLeftStore')
         right_store = self.get_object('UpdateRightStore')
+        to_remove = [model.get_iter(p) for p in path]
         for selected in path:
             left_store.append(tuple(model[selected]))
-            right_store.remove(model.get_iter(selected))
+        for rem in to_remove:
+            right_store.remove(rem)
 
     def on_UpdateSave_clicked(self, *args):
         left_store = self.get_object('UpdateLeftStore')
@@ -263,8 +258,8 @@ class Handler(Builder):
         right_team = Players(*[self.players.find_id(p[0]) for p in right_store])
         left_delta = int(left_team.delta(True, right_team))
         right_delta = int(right_team.delta(False, left_team))
-        left_team.update_rating(left_delta)
-        right_team.update_rating(right_delta)
+        left_team.update_rating(left_delta, True)
+        right_team.update_rating(right_delta, False)
         self.players.dump(PLAYERS_PICKLE)
         remove(MAKETEAMS_PICKLE)
         store = self.get_object('PlayersStore')
@@ -292,3 +287,6 @@ class Handler(Builder):
         for p in right_store:
             p[6] = right_delta
             p[7] = p[3] +right_delta
+
+    def on_AboutButton_clicked(self, *args):
+        self.get_object('AboutWindow').present()

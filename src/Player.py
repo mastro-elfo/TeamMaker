@@ -2,8 +2,6 @@
 from Uid.Uid import Uid
 from time import time
 
-# TODO: Add wins/lost
-
 class Player(Uid):
     def __init__(self,
                 nickname,
@@ -18,6 +16,8 @@ class Player(Uid):
         self.last_update = time()
         self.name = name
         self.surname = surname
+        self.win = 0
+        self.lost = 0
         super(Player, self).__init__(*args, **kwargs)
 
     def __iter__(self):
@@ -40,4 +40,19 @@ class Player(Uid):
             self.name = name
         if surname is not None:
             self.surname = surname
+        self.last_update = time()
+
+    def update_rating(self, delta, win):
+        self.rating += delta
+        if win:
+            # TODO: remove when all players have win/lost
+            try:
+                self.win += 1
+            except:
+                self.win = 1
+        else:
+            try:
+                self.lost += 1
+            except:
+                self.lost = 1
         self.last_update = time()

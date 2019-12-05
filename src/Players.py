@@ -45,10 +45,9 @@ class Players(Pickable):
         except:
             return 0
 
-    def update_rating(self, delta):
+    def update_rating(self, delta, win):
         for p in self:
-            p.rating += delta
-            p.last_update = time()
+            p.update_rating(delta, win)
 
     def find_id(self, id):
         res = [p for p in self if p.id == id]
