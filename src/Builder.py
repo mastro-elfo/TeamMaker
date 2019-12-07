@@ -39,4 +39,10 @@ class Builder(object):
     def set_active(self, id, active):
         self.get_object(id).set_active(active)
 
+    def set_visible(self, id, visible):
+        self.get_object(id).set_visible(visible)
+
     # is-ers
+    def is_visible(self, id):
+        """https://lazka.github.io/pgi-docs/Gtk-3.0/classes/Widget.html#Gtk.Widget.get_visible"""
+        return self.get_object(id).is_visible()

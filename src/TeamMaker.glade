@@ -192,6 +192,20 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToolButton" id="UpdatesButton">
+                <property name="can_focus">False</property>
+                <property name="no_show_all">True</property>
+                <property name="tooltip_text" translatable="yes">Update</property>
+                <property name="label" translatable="yes">Update</property>
+                <property name="use_underline">True</property>
+                <property name="icon_name">software-update-available</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToolButton" id="AboutButton">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -361,6 +375,7 @@
     <property name="transient_for">MainWindow</property>
     <property name="attached_to">MainWindow</property>
     <property name="program_name">Team Maker</property>
+    <property name="version">1.0</property>
     <property name="copyright" translatable="yes">mastro-elfo 2019</property>
     <property name="authors">mastro-elfo</property>
     <property name="logo_icon_name">applications-games</property>

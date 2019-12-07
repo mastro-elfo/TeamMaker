@@ -7,6 +7,7 @@ from Players import Players
 from Player import Player
 from TeamMaker import make_best, make_pairs, make_abba
 from Pickable.Pickable import dump, load
+from update import check_update
 
 from os.path import expanduser, join
 from os import makedirs, remove
@@ -27,6 +28,8 @@ class Handler(Builder):
         self.update_store('PlayersStore', map(lambda x: (x.id, x.nickname, x.number, x.rating, x.name, x.surname), self.players))
         # Status
         self.status('Loaded %d players' %len(self.players))
+        # Check update
+        self.check_update()
 
     def status(self, message):
         self.get_object('StatusBar').push(0, message)
@@ -55,6 +58,10 @@ class Handler(Builder):
         store.clear()
         for x in list_:
             store.append(x)
+
+    def check_update(self):
+        if check_update(self.get_object('AboutWindow').get_version()):
+            self.set_visible('UpdatesButton', True)
 
     # Events
     def on_PlayersSelection_changed(self, selection, *args):
