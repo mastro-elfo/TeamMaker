@@ -104,9 +104,9 @@ class Handler(Builder):
             selected = model[path]
             player = self.players.find_id(selected[0])
             if player is not None:
-                player.update(**zip(('nickname', 'number', 'rating', 'name', 'surname'), data))
+                player.update(**dict(zip(('nickname', 'number', 'rating', 'name', 'surname'), data)))
                 self.players.dump(PLAYERS_PICKLE)
-                store.set(model.get_iter(path), [0, 1, 2, 3, 4, 5, 6], tuple(player))
+                store.set(model.get_iter(path), [1, 2, 3, 4, 5], tuple(player)[1:6])
                 self.status('Edit player: %s, %s' %(data[0], data[1]))
             else:
                 self.status('Error: player not found in list')

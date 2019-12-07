@@ -25,9 +25,9 @@ class Player(Uid):
         yield self.nickname
         yield self.number
         yield self.rating
-        yield self.last_update
         yield self.name
         yield self.surname
+        yield self.last_update
 
     def update(self, nickname = None, number = None, rating = None, name = None, surname = None):
         if nickname is not None:
