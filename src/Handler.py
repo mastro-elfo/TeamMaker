@@ -1,12 +1,13 @@
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 from Builder import Builder
 from Players import Players
 from Player import Player
 from TeamMaker import make_best, make_pairs, make_abba
 from Pickable.Pickable import dump, load
+from update import check_update, download_update, extract_update, install_contents
 
 from os.path import expanduser, join
 from os import makedirs, remove
@@ -27,6 +28,9 @@ class Handler(Builder):
         self.update_store('PlayersStore', map(lambda x: (x.id, x.nickname, x.number, x.rating, x.name, x.surname), self.players))
         # Status
         self.status('Loaded %d players' %len(self.players))
+        # Latest release
+        self.__latest = None
+        GLib.timeout_add(1000, self.check_update)
 
     def status(self, message):
         self.get_object('StatusBar').push(0, message)
@@ -55,6 +59,13 @@ class Handler(Builder):
         store.clear()
         for x in list_:
             store.append(x)
+
+    def check_update(self):
+        to_update, json = check_update(self.get_object('AboutWindow').get_version())
+        if to_update:
+            self.set_visible('UpdatesButton', True)
+            self.__latest = json
+        return False
 
     # Events
     def on_PlayersSelection_changed(self, selection, *args):
@@ -290,3 +301,30 @@ class Handler(Builder):
 
     def on_AboutButton_clicked(self, *args):
         self.get_object('AboutWindow').present()
+
+    def on_ConfirmDoUpdates_clicked(self, button, *args):
+        self.set_text('UpdatesStatus', '')
+
+        if self.__latest is None:
+            self.set_text('UpdatesStatus', 'Unexpected error while updating, nothing changed')
+            return
+
+        ret, e = download_update(self.__latest['tarball_url'])
+        if not ret:
+            self.set_text('UpdatesStatus', 'Error while downloading: ' +e)
+            return
+
+        ret, e = extract_update()
+        if not ret:
+            self.set_text('UpdatesStatus', 'Error while extracting archive: ' +e)
+            return
+
+        ret, e = install_contents()
+        if not ret:
+            self.set_text('UpdatesStatus', 'Error while installing contents: ' +e)
+            return
+
+        button.set_sensitive(False)
+        self.set_text('UpdatesStatus', 'Install complete, restart required')
+        self.status('Install complete, restart required')
+        # self.popdown(self.get_object('UpdatesPopover'))
