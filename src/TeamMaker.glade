@@ -309,7 +309,7 @@
                       <object class="GtkTreeViewColumn">
                         <property name="title" translatable="yes">Name</property>
                         <property name="reorderable">True</property>
-                        <property name="sort_column_id">5</property>
+                        <property name="sort_column_id">4</property>
                         <child>
                           <object class="GtkCellRendererText"/>
                           <attributes>
@@ -322,7 +322,7 @@
                       <object class="GtkTreeViewColumn">
                         <property name="title" translatable="yes">Surname</property>
                         <property name="reorderable">True</property>
-                        <property name="sort_column_id">6</property>
+                        <property name="sort_column_id">5</property>
                         <child>
                           <object class="GtkCellRendererText"/>
                           <attributes>
