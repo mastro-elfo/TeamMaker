@@ -10,7 +10,7 @@ from Pickable.Pickable import dump, load
 from update import check_update, download_update, extract_update, install_contents
 
 from os.path import expanduser, join
-from os import makedirs, remove
+from os import makedirs, remove, is_file
 from time import time
 
 # Some global init
@@ -272,7 +272,8 @@ class Handler(Builder):
         left_team.update_rating(left_delta, True)
         right_team.update_rating(right_delta, False)
         self.players.dump(PLAYERS_PICKLE)
-        remove(MAKETEAMS_PICKLE)
+        if(is_file(MAKETEAMS_PICKLE)):
+            remove(MAKETEAMS_PICKLE)
         store = self.get_object('PlayersStore')
         for p in left_team:
             for r in store:
