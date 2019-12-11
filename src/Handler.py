@@ -9,8 +9,8 @@ from TeamMaker import make_best, make_pairs, make_abba
 from Pickable.Pickable import dump, load
 from update import check_update, download_update, extract_update, install_contents
 
-from os.path import expanduser, join
-from os import makedirs, remove, is_file
+from os.path import expanduser, join, isfile
+from os import makedirs, remove
 from time import time
 
 # Some global init
@@ -272,7 +272,7 @@ class Handler(Builder):
         left_team.update_rating(left_delta, True)
         right_team.update_rating(right_delta, False)
         self.players.dump(PLAYERS_PICKLE)
-        if(is_file(MAKETEAMS_PICKLE)):
+        if(isfile(MAKETEAMS_PICKLE)):
             remove(MAKETEAMS_PICKLE)
         store = self.get_object('PlayersStore')
         for p in left_team:
