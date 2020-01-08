@@ -9,6 +9,7 @@ class Player(Uid):
                 rating,
                 name,
                 surname,
+                rating_change = "media-playback-pause",
                 *args, **kwargs):
         self.nickname = nickname
         self.number = number
@@ -18,6 +19,7 @@ class Player(Uid):
         self.surname = surname
         self.win = 0
         self.lost = 0
+        self.rating_change = rating_change
         super(Player, self).__init__(*args, **kwargs)
 
     def __iter__(self):
@@ -55,4 +57,8 @@ class Player(Uid):
                 self.lost += 1
             except:
                 self.lost = 1
+        if delta > 0:
+            self.rating_change = "go-up"
+        elif delta < 0:
+            self.rating_change = "go-down"
         self.last_update = time()

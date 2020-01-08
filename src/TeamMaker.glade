@@ -54,6 +54,8 @@
       <column type="gchararray"/>
       <!-- column-name Surname -->
       <column type="gchararray"/>
+      <!-- column-name RatingChange -->
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkApplicationWindow" id="MainWindow">
@@ -307,6 +309,18 @@
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn">
+                        <property name="title" translatable="yes">A</property>
+                        <property name="reorderable">True</property>
+                        <child>
+                          <object class="GtkCellRendererPixbuf"/>
+                          <attributes>
+                            <attribute name="icon-name">6</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn">
                         <property name="title" translatable="yes">Name</property>
                         <property name="reorderable">True</property>
                         <property name="sort_column_id">4</property>
@@ -376,7 +390,7 @@
     <property name="transient_for">MainWindow</property>
     <property name="attached_to">MainWindow</property>
     <property name="program_name">Team Maker</property>
-    <property name="version">1.3</property>
+    <property name="version">1.4</property>
     <property name="copyright" translatable="yes">mastro-elfo 2019</property>
     <property name="authors">mastro-elfo</property>
     <property name="logo_icon_name">applications-games</property>
