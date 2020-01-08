@@ -25,7 +25,15 @@ class Handler(Builder):
         # Load
         self.players = self.load()
         # Update
-        self.update_store('PlayersStore', map(lambda x: (x.id, x.nickname, x.number, x.rating, x.name, x.surname), self.players))
+        self.update_store('PlayersStore', map(lambda x: (
+            x.id,
+            x.nickname,
+            x.number,
+            x.rating,
+            x.name,
+            x.surname,
+            x.rating_change
+            ), self.players))
         # Status
         self.status('Loaded %d players' %len(self.players))
         # Latest release
@@ -50,7 +58,12 @@ class Handler(Builder):
 
     def load(self):
         try:
-            return Players.load(PLAYERS_PICKLE)
+            ps = Players.load(PLAYERS_PICKLE)
+            # Add rating_change, new from 1.4
+            for p in ps:
+                if not hasattr(p, 'rating_change'):
+                    p.rating_change = "media-playback-pause"
+            return ps
         except:
             return Players()
 
@@ -279,10 +292,12 @@ class Handler(Builder):
             for r in store:
                 if r[0] == p.id:
                     r[3] = p.rating
+                    r[6] = p.rating_change
         for p in right_team:
             for r in store:
                 if r[0] == p.id:
                     r[3] = p.rating
+                    r[6] = p.rating_change
         self.popdown(self.get_object('UpdatePopover'))
         self.status("Ratings updated")
 
