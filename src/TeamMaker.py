@@ -1,5 +1,5 @@
-
 from Players import Players
+
 
 def make_best(players):
     """Minimize the absolute value of the difference of strengths"""
@@ -15,7 +15,9 @@ def make_best(players):
         right_team.insert(j, from_left)
         swap_left_team_strength = left_team.strength()
         swap_right_team_strength = right_team.strength()
-        if abs(swap_left_team_strength - swap_right_team_strength) < abs(left_team_strength - right_team_strength):
+        if abs(swap_left_team_strength - swap_right_team_strength) < abs(
+            left_team_strength - right_team_strength
+        ):
             # Swap is better
             i, j = 0, 0
         else:
@@ -32,9 +34,10 @@ def make_best(players):
                 done = True
     return left_team, right_team
 
+
 def make_pairs(players):
     """Each step give the weaker team the stronger player"""
-    players_ = sorted(players, key = lambda x: x.rating, reverse = True)
+    players_ = sorted(players, key=lambda x: x.rating, reverse=True)
     left_team = Players()
     right_team = Players()
     while len(players_) > 1:
@@ -55,9 +58,10 @@ def make_pairs(players):
             left_team.append(players_.pop(0))
     return left_team, right_team
 
+
 def make_abba(players):
     """Each step give the weaker team the stronger player in ABBA order"""
-    players_ = sorted(players, key = lambda x: x.rating, reverse = True)
+    players_ = sorted(players, key=lambda x: x.rating, reverse=True)
     left_team = Players()
     right_team = Players()
     while len(players_) > 4:

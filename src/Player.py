@@ -1,16 +1,19 @@
-
 from Uid.Uid import Uid
 from time import time
 
+
 class Player(Uid):
-    def __init__(self,
-                nickname,
-                number,
-                rating,
-                name,
-                surname,
-                rating_change = "media-playback-pause",
-                *args, **kwargs):
+    def __init__(
+        self,
+        nickname,
+        number,
+        rating,
+        name,
+        surname,
+        rating_change="media-playback-pause",
+        *args,
+        **kwargs
+    ):
         self.nickname = nickname
         self.number = number
         self.rating = rating
@@ -31,7 +34,7 @@ class Player(Uid):
         yield self.surname
         yield self.last_update
 
-    def update(self, nickname = None, number = None, rating = None, name = None, surname = None):
+    def update(self, nickname=None, number=None, rating=None, name=None, surname=None):
         if nickname is not None:
             self.nickname = nickname
         if number is not None:

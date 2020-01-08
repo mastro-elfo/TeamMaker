@@ -1,4 +1,3 @@
-
 class Builder(object):
     def __init__(self, builder, *args, **kwargs):
         super(Builder, self).__init__(*args, **kwargs)

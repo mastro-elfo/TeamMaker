@@ -1,6 +1,6 @@
-
 from Pickable.Pickable import Pickable
 from time import time
+
 
 class Players(Pickable):
     def __init__(self, *players, **kwargs):
@@ -36,12 +36,14 @@ class Players(Pickable):
 
     def chance(self, opponent):
         """Evaluate chance against `opponent`"""
-        return 1.0 / (1.0 + 10.0**(float(opponent.strength() - self.strength()) /400.0))
+        return 1.0 / (
+            1.0 + 10.0 ** (float(opponent.strength() - self.strength()) / 400.0)
+        )
 
     def delta(self, winner, opponent):
         """Evaluate `self` delta player rating"""
         try:
-            return 40.0 * ((1.0 if winner else 0.0) - self.chance(opponent)) /len(self)
+            return 40.0 * ((1.0 if winner else 0.0) - self.chance(opponent)) / len(self)
         except:
             return 0
 
