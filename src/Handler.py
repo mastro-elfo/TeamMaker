@@ -10,7 +10,7 @@ from time import time
 from Builder import Builder
 from Players import Players
 from Player import Player
-from TeamMaker import make_best, make_pairs, make_abba
+from TeamMaker import make_pairs
 from Pickable.Pickable import dump, load
 from update import check_update, download_update, extract_update, install_contents
 
@@ -220,7 +220,7 @@ class Handler(Builder):
         players = list(
             filter(lambda x: x.id in [model[p][0] for p in path], self.players)
         )
-        left_team, right_team = make_best(players)
+        left_team, right_team = make_pairs(players)
         self.update_store(
             "MakeLeftStore",
             map(
@@ -404,7 +404,7 @@ class Handler(Builder):
             )
             return
 
-        ret, e = download_update(self.__latest["tarball_url"])
+        ret, json = download_update(self.__latest["tarball_url"])
         if not ret:
             self.set_text("UpdatesStatus", "Error while downloading: " + e)
             return
@@ -420,6 +420,8 @@ class Handler(Builder):
             return
 
         button.set_sensitive(False)
-        self.set_text("UpdatesStatus", "Install complete, restart required")
+        self.set_text(
+            "UpdatesStatus", json["body"] + "\n\nInstall complete, restart required"
+        )
         self.status("Install complete, restart required")
         # self.popdown(self.get_object('UpdatesPopover'))
