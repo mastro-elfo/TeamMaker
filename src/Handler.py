@@ -125,6 +125,7 @@ class Handler(Builder):
                 player.rating,
                 player.name,
                 player.surname,
+                "media-playback-pause",
             )
         )
         self.popdown(self.get_object("NewPopover"))
