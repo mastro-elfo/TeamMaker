@@ -422,7 +422,8 @@ class Handler(Builder):
 
         button.set_sensitive(False)
         self.set_text(
-            "UpdatesStatus", json["body"] + "\n\nInstall complete, restart required"
+            "UpdatesStatus",
+            self.__latest["body"] + "\n\nInstall complete, restart required",
         )
         self.status("Install complete, restart required")
         # self.popdown(self.get_object('UpdatesPopover'))
