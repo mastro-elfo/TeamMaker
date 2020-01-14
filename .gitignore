@@ -3,4 +3,4 @@
 **/*.pyc
 *~
 TODO.txt
-#*.glade#
+src/#TeamMaker.glade#
